@@ -1,0 +1,167 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Job | Nazdeekly</title>
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=1.2">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+
+<!-- ================= NAVBAR ================= -->
+
+<nav class="navbar">
+
+    <div class="logo">
+        Nazdeekly
+    </div>
+
+    <div class="profile">
+
+        <button class="profile-btn">
+
+            <div class="avatar">
+                {{ user.full_name|default:user.username|slice:":1"|upper }}
+            </div>
+
+            <span>{{ user.full_name|default:user.username }}</span>
+
+        </button>
+
+    </div>
+
+</nav>
+
+<!-- ================= PAGE ================= -->
+
+<div class="container">
+
+    <div class="page-title">
+
+        <h1><i class="fa-solid fa-briefcase"></i> Post New Job</h1>
+
+        <p>Create a new job opportunity for nearby candidates.</p>
+
+    </div>
+
+    <div class="job-form-card">
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            <div class="row">
+
+                <div class="form-group">
+
+                    <label>Job Title</label>
+
+                    <input type="text"
+                           name="job_title"
+                           placeholder="Python Developer"
+                           required>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>Company Name</label>
+
+                    <input type="text"
+                           name="company_name"
+                           placeholder="ABC Pvt Ltd"
+                           required>
+
+                </div>
+
+            </div>
+
+            <div class="row">
+
+                <div class="form-group">
+
+                    <label>Location</label>
+
+                    <input type="text"
+                           name="location"
+                           placeholder="Indore"
+                           required>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>Salary</label>
+
+                    <input type="number"
+                           name="salary"
+                           placeholder="25000"
+                           required>
+
+                </div>
+
+            </div>
+
+            <div class="row">
+
+                <div class="form-group">
+
+                    <label>Job Type</label>
+
+                    <select name="job_type">
+
+                        <option>Full Time</option>
+
+                        <option>Part Time</option>
+
+                        <option>Internship</option>
+
+                        <option>Remote</option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+            <div class="form-group">
+
+                <label>Job Description</label>
+
+                <textarea
+                    name="description"
+                    rows="6"
+                    placeholder="Write complete job description..."
+                    required></textarea>
+
+            </div>
+
+            <div class="button-group">
+
+                <button class="save-btn">
+
+                    <i class="fa-solid fa-floppy-disk"></i>
+
+                    Publish Job
+
+                </button>
+
+                <a href="{% url 'my_jobs' %}" class="cancel-btn">
+
+                    Cancel
+
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+</body>
+</html>
