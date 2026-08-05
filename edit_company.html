@@ -1,0 +1,57 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Company Profile | Nazdeekly</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="logo">Nazdeekly</div>
+    <div class="profile">
+        <a href="{% url 'employer-page' %}" style="margin-right: 15px; text-decoration: none; color: #333;"><i class="fa-solid fa-arrow-left"></i> Dashboard</a>
+    </div>
+</nav>
+
+<div class="container" style="max-width: 700px; margin-top: 30px;">
+    <div class="page-title">
+        <h1><i class="fa-solid fa-pen-to-square"></i> Edit Company Profile</h1>
+        <p>Keep your company information updated.</p>
+    </div>
+
+    <div class="job-form-card" style="background: #fff; padding: 25px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-group" style="margin-bottom: 15px;">
+                <label style="display: block; font-weight: 600; margin-bottom: 5px;">Company Name</label>
+                <input type="text" name="company_name" value="{{ company.company_name }}" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px;">
+            </div>
+
+            <div class="form-group" style="margin-bottom: 15px;">
+                <label style="display: block; font-weight: 600; margin-bottom: 5px;">Company Website</label>
+                <input type="url" name="website" value="{{ company.website|default:'' }}" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px;">
+            </div>
+
+            <div class="form-group" style="margin-bottom: 15px;">
+                <label style="display: block; font-weight: 600; margin-bottom: 5px;">Office Address</label>
+                <input type="text" name="address" value="{{ company.address }}" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px;">
+            </div>
+
+            <div class="form-group" style="margin-bottom: 20px;">
+                <label style="display: block; font-weight: 600; margin-bottom: 5px;">Company Description</label>
+                <textarea name="description" rows="5" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px;">{{ company.description }}</textarea>
+            </div>
+
+            <button type="submit" class="save-btn" style="width: 100%; padding: 12px; font-size: 1rem;">
+                <i class="fa-solid fa-floppy-disk"></i> Update Profile
+            </button>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>
