@@ -1,0 +1,275 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Employer Applications</title>
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}"?v=1.2>
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+</head>
+
+<body>
+
+    <nav class="navbar">
+
+        <div class="logo">
+            Nazdeekly
+        </div>
+
+        <div>
+
+            <a href="{% url 'employer-page' %}" class="back-btn">
+
+                <i class="fa-solid fa-house"></i>
+
+                Dashboard
+
+            </a>
+
+        </div>
+
+    </nav>
+
+
+    <div class="container">
+
+        <div class="page-title">
+
+            <h2>
+
+                <i class="fa-solid fa-users"></i>
+
+                Job Applications
+
+            </h2>
+
+            <p>
+
+                View every applicant who applied to your jobs.
+
+            </p>
+
+        </div>
+
+
+        {% if applications %}
+
+        <table class="application-table">
+
+            <thead>
+
+                <tr>
+
+                    <th>Applicant</th>
+
+                    <th>Email</th>
+
+                    <th>Mobile</th>
+
+                    <th>Job</th>
+
+                    <th>Resume</th>
+
+                    <th>Status</th>
+
+                    <th>Action</th>
+
+                    <th>Chat</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% for application in applications %}
+
+                <tr>
+
+                    <td>
+
+                        <strong>
+
+                            {{ application.applicant.full_name }}
+
+                        </strong>
+
+                        <br>
+
+                        <small>
+
+                            @{{ application.applicant.username }}
+
+                        </small>
+
+                    </td>
+
+                    <td>
+
+                        {{ application.applicant.email }}
+
+                    </td>
+
+                    <td>
+
+                        {{ application.applicant.mobile_no }}
+
+                    </td>
+
+                    <td>
+
+                        {{ application.job.job_title }}
+
+                    </td>
+
+                    <td>
+
+                        {% if application.resume %}
+
+                        <a href="{{ application.resume.url }}"
+
+                            target="_blank"
+
+                            class="resume-btn">
+
+                            <i class="fa-solid fa-file-pdf"></i>
+
+                            View Resume
+
+                        </a>
+
+                        {% else %}
+
+                        No Resume
+
+                        {% endif %}
+
+                    </td>
+
+                    <td>
+
+                        {% if application.status == "Pending" %}
+
+                        <span class="status pending">
+
+                            Pending
+
+                        </span>
+
+                        {% elif application.status == "Accepted" %}
+
+                        <span class="status accepted">
+
+                            Accepted
+
+                        </span>
+
+                        {% else %}
+
+                        <span class="status rejected">
+
+                            Rejected
+
+                        </span>
+
+                        {% endif %}
+
+                    </td>
+
+                    <td>
+
+                        {% if application.status == "Pending" %}
+
+                        <a href="{% url 'update-app-status' application.id 'Accepted' %}"
+
+                            class="accept-btn">
+
+                            Accept
+
+                        </a>
+
+                        <a href="{% url 'update-app-status' application.id 'Rejected' %}"
+
+                            class="reject-btn">
+
+                            Reject
+
+                        </a>
+
+                        {% elif application.status == "Accepted" %}
+
+                        <span class="accepted-text">
+
+                            Candidate Accepted
+
+                        </span>
+
+                        {% else %}
+
+                        <span class="rejected-text">
+
+                            Candidate Rejected
+
+                        </span>
+
+                        {% endif %}
+
+                    </td>
+
+                    <td>
+
+                        <a href="{% url 'application-chat' application.id %}"
+
+                            class="chat-btn">
+
+                            <i class="fa-solid fa-comments"></i>
+
+                            Open Chat
+
+                        </a>
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+        {% else %}
+
+        <div class="empty-card">
+
+            <i class="fa-solid fa-folder-open"></i>
+
+            <h3>
+
+                No Applications Yet
+
+            </h3>
+
+            <p>
+
+                Applicants will appear here once they apply to your jobs.
+
+            </p>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</body>
+
+</html>
