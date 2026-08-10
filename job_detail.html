@@ -1,0 +1,81 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ job.job_title }} | Nazdeekly</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}"?v=1.2>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="logo">Nazdeekly</div>
+    <div class="profile">
+        <a href="{% url 'view-jobs' %}" style="margin-right: 15px; text-decoration: none; color: #333;"><i class="fa-solid fa-arrow-left"></i> Back to Jobs</a>
+    </div>
+</nav>
+
+<div class="container" style="max-width: 800px; margin-top: 30px;">
+
+    {% if error %}
+        <div style="background: #ffebee; color: #c62828; padding: 12px; border-radius: 6px; margin-bottom: 20px;">
+            {{ error }}
+        </div>
+    {% endif %}
+
+    <div style="background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+        
+        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+            <div>
+                <h1 style="margin: 0 0 10px 0;">{{ job.job_title }}</h1>
+                <h3 style="margin: 0 0 15px 0; color: #666;"><i class="fa-solid fa-building"></i> {{ job.company_name }}</h3>
+            </div>
+            <span style="background: #e8f0fe; color: #1a73e8; padding: 6px 14px; border-radius: 20px; font-weight: 600;">
+                {{ job.job_type }}
+            </span>
+        </div>
+
+        <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
+
+        <div style="display: flex; gap: 25px; margin-bottom: 20px; color: #555;">
+            <span><i class="fa-solid fa-location-dot"></i> <strong>Location:</strong> {{ job.location }}</span>
+            <span><i class="fa-solid fa-indian-rupee-sign"></i> <strong>Salary:</strong> ₹{{ job.salary }} / month</span>
+            <span><i class="fa-solid fa-calendar"></i> <strong>Posted:</strong> {{ job.created_at|date:"M d, Y" }}</span>
+        </div>
+
+        <h3>Job Description</h3>
+        <p style="line-height: 1.7; color: #444; white-space: pre-line;">{{ job.description }}</p>
+
+        <hr style="border: 0; border-top: 1px solid #eee; margin: 30px 0;">
+
+        <!-- Application Form Section -->
+        {% if user.role == 'Job Seeker' %}
+            {% if has_applied %}
+                <div style="background: #e8f5e9; color: #2e7d32; padding: 15px; border-radius: 6px; text-align: center; font-weight: 600;">
+                    <i class="fa-solid fa-circle-check"></i> You have already applied for this position.
+                </div>
+            {% else %}
+                <h3>Apply for this Position</h3>
+                <form method="POST" enctype="multipart/form-data" style="margin-top: 15px;">
+                    {% csrf_token %}
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; font-weight: 600; margin-bottom: 5px;">Upload Resume (PDF/DOCX):</label>
+                        <input type="file" name="resume" accept=".pdf,.doc,.docx" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px;">
+                    </div>
+                    <button type="submit" class="save-btn" style="width: 100%; padding: 12px; font-size: 1rem;">
+                        <i class="fa-solid fa-paper-plane"></i> Submit Application
+                    </button>
+                </form>
+            {% endif %}
+        {% else %}
+            <p style="color: #777;"><em>Logged in as Employer. Only Job Seekers can submit applications.</em></p>
+        {% endif %}
+
+    </div>
+
+</div>
+
+</body>
+</html>
