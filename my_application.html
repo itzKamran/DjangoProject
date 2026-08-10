@@ -1,0 +1,263 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Applications</title>
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}"?v=1.2>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+    <nav class="navbar">
+
+        <div class="logo">
+            Nazdeekly
+        </div>
+
+        <div>
+
+            <a href="{% url 'jobseeker-page' %}" class="back-btn">
+
+                <i class="fa-solid fa-house"></i>
+
+                Dashboard
+
+            </a>
+
+        </div>
+
+    </nav>
+
+
+    <div class="container">
+
+        <div class="page-title">
+
+            <h2>
+
+                <i class="fa-solid fa-file-circle-check"></i>
+
+                My Job Applications
+
+            </h2>
+
+            <p>
+
+                Track all jobs you have applied for.
+
+            </p>
+
+        </div>
+
+        {% if applications %}
+
+        <table class="application-table">
+
+            <thead>
+
+                <tr>
+
+                    <th>Job Title</th>
+
+                    <th>Company</th>
+
+                    <th>Location</th>
+
+                    <th>Salary</th>
+
+                    <th>Status</th>
+
+                    <th>Resume</th>
+
+                    <th>Employer</th>
+
+                    <th>Chat</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% for application in applications %}
+
+                <tr>
+
+                    <td>
+
+                        <strong>
+
+                            {{ application.job.job_title }}
+
+                        </strong>
+
+                    </td>
+
+                    <td>
+
+                        {{ application.job.company_name }}
+
+                    </td>
+
+                    <td>
+
+                        {{ application.job.location }}
+
+                    </td>
+
+                    <td>
+
+                        ₹{{ application.job.salary }}
+
+                    </td>
+
+                    <td>
+
+                        {% if application.status == "Pending" %}
+
+                        <span class="status pending">
+
+                            Pending
+
+                        </span>
+
+                        {% elif application.status == "Accepted" %}
+
+                        <span class="status accepted">
+
+                            Accepted
+
+                        </span>
+
+                        {% else %}
+
+                        <span class="status rejected">
+
+                            Rejected
+
+                        </span>
+
+                        {% endif %}
+
+                    </td>
+
+                    <td>
+
+                        {% if application.resume %}
+
+                        <a href="{{ application.resume.url }}"
+
+                            target="_blank"
+
+                            class="resume-btn">
+
+                            <i class="fa-solid fa-file-pdf"></i>
+
+                            Resume
+
+                        </a>
+
+                        {% else %}
+
+                        No Resume
+
+                        {% endif %}
+
+                    </td>
+
+                    <td>
+
+                        {{ application.job.employer.full_name }}
+
+                        <br>
+
+                        <small>
+
+                            @{{ application.job.employer.username }}
+
+                        </small>
+
+                    </td>
+
+                    <td>
+
+                        {% if application.status == "Accepted" %}
+
+                        <a href="{% url 'application-chat' application.id %}"
+
+                            class="chat-btn">
+
+                            <i class="fa-solid fa-comments"></i>
+
+                            Chat
+
+                        </a>
+
+                        {% else %}
+
+                        <button class="disabled-btn" disabled>
+
+                            <i class="fa-solid fa-lock"></i>
+
+                            Waiting
+
+                        </button>
+
+                        {% endif %}
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+        {% else %}
+
+        <div class="empty-card">
+
+            <i class="fa-solid fa-folder-open"></i>
+
+            <h3>
+
+                No Applications Yet
+
+            </h3>
+
+            <p>
+
+                Apply for jobs to see them here.
+
+            </p>
+
+            <br>
+
+            <a href="{% url 'view-jobs' %}"
+
+                class="chat-btn">
+
+                Browse Jobs
+
+            </a>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</body>
+
+</html>
