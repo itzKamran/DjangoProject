@@ -1,0 +1,96 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications | Nazdeekly</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}"?v=1.2>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+
+
+<nav class="navbar">
+    <div class="logo">Nazdeekly</div>
+    <div class="profile">
+        {% if user.role == 'Employer' %}
+            <a href="{% url 'employer-page' %}" style="text-decoration: none; color: #333;"><i class="fa-solid fa-arrow-left"></i> Dashboard</a>
+        {% else %}
+            <a href="{% url 'jobseeker-page' %}" style="text-decoration: none; color: #333;"><i class="fa-solid fa-arrow-left"></i> Dashboard</a>
+        {% endif %}
+    </div>
+</nav>
+
+<div class="container" style="max-width: 750px; margin-top: 30px;">
+    <div class="page-title">
+        <h1><i class="fa-solid fa-bell"></i> All Notifications</h1>
+        <p>Stay updated on application progress and messages.</p>
+    </div>
+
+    <div style="background: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); padding: 15px;">
+        {% for notif in notifications %}
+            <div style="padding: 12px 15px; border-bottom: 1px solid #eee; display: flex; align-items: center; justify-content: space-between;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    {% if notif.notification_type == 'STATUS' %}
+                        <i class="fa-solid fa-clipboard-check" style="color: #28a745; font-size: 1.2rem;"></i>
+                    {% else %}
+                        <i class="fa-solid fa-comment-dots" style="color: #1a73e8; font-size: 1.2rem;"></i>
+                    {% endif %}
+                    <div>
+                        <div style="font-weight: 500; color: #333;">{{ notif.message }}</div>
+                        <small style="color: #888;">{{ notif.created_at|date:"M d, Y | h:i A" }}</small>
+                    </div>
+                </div>
+                {% if notif.link %}
+                    <a href="{{ notif.link }}" class="save-btn" style="text-decoration: none; font-size: 0.8rem; padding: 6px 12px;">View</a>
+                {% endif %}
+            </div>
+        {% empty %}
+            <p style="text-align: center; color: #888; padding: 20px;">No notifications yet.</p>
+        {% endfor %}
+    </div>
+</div>
+<div class="profile" style="display: flex; align-items: center; gap: 15px;">
+    
+    <!-- Notification Bell -->
+    <div style="position: relative;">
+        <a href="{% url 'notifications-page' %}" style="color: #333; font-size: 1.2rem; text-decoration: none; position: relative;">
+            <i class="fa-solid fa-bell"></i>
+            <span id="notifBadge" style="display: none; position: absolute; top: -6px; right: -8px; background: #dc3545; color: white; border-radius: 50%; padding: 2px 6px; font-size: 0.65rem; font-weight: bold;">0</span>
+        </a>
+    </div>
+
+    <!-- Existing Profile Button -->
+    <button class="profile-btn" onclick="openSidebar()">
+        <div class="avatar">
+            {{ user.full_name|default:user.username|slice:":1"|upper }}
+        </div>
+        <span>{{ user.full_name|default:user.username }}</span>
+        <i class="fa-solid fa-chevron-down"></i>
+    </button>
+</div>
+
+<script>
+    function checkNotifications() {
+        fetch("{% url 'unread-notifications-api' %}")
+            .then(res => res.json())
+            .then(data => {
+                const badge = document.getElementById('notifBadge');
+                if (data.unread_count > 0) {
+                    badge.innerText = data.unread_count;
+                    badge.style.display = 'inline-block';
+                } else {
+                    badge.style.display = 'none';
+                }
+            })
+            .catch(err => console.error("Error loading notifications:", err));
+    }
+
+    // Initial load and poll every 10 seconds
+    checkNotifications();
+    setInterval(checkNotifications, 10000);
+</script>
+
+</body>
+</html>
